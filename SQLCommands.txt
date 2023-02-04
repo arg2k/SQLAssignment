@@ -1,0 +1,49 @@
+CREATE TABLE Employee (
+    EmpId int PRIMARY KEY,
+    FirstName varchar(101) NOT NULL,
+    LastName varchar(101) NOT NULL,
+    Email varchar(202),
+    DeptId varchar(101),
+    Address varchar(202),
+    Salary number
+);
+
+-------------------------------------------------------------------------------------
+
+CREATE TABLE Department (
+    DeptId int Primary Key,
+    DeptName varchar(202) NOT NULL
+);
+
+-------------------------------------------------------------------------------------
+
+create sequence locationSeq start with 1 increment by 1;
+
+create table location (
+    locationId int default on null locationSeq.nextval primary key,
+    city varchar(202) NOT NULL
+);
+
+-------------------------------------------------------------------------------------
+
+alter table Department add locationId number;
+
+alter table Department modify locationId number references location(locationId);
+
+-------------------------------------------------------------------------------------
+
+SELECT Employee.FirstName, Department.DeptName, location.city
+FROM Employee
+JOIN Department ON Employee.DeptId = Department.DeptId
+JOIN location ON Department.locationId = location.locationId;
+
+-------------------------------------------------------------------------------------
+
+with decreasingSalary as (
+  select EmpId, FirstName, Salary
+  from employee
+  order by Salary desc
+  fetch first 2 rows only
+)
+select EmpId, FirstName, Salary
+FROM decreasingSalary;
